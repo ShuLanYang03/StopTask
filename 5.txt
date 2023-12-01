@@ -1,0 +1,33 @@
+# nogo是這樣
+task nogo
+  table nogotable
+  set $trialcorrect 1  
+  keys b n
+  show bitmap frame
+  delay 500
+  part nice_fixpoint
+  set $nogodelay random 100 450 50
+  set $resttime expression 500 - $nogodelay
+  show bitmap @2 # 箭头
+  readkey @3 $nogodelay # 'wait' 直到 nogo 延迟结束
+  set $rt1 RT
+  set $status1 STATUS
+  if $status1 == TIMEOUT
+    clear -1
+    show bitmap @4 # 停止信号
+    readkey @3 $resttime # 剩余时间直到 500 毫秒
+    clear -1
+  fi
+  if $status1 == CORRECT
+    clear -1
+  fi
+  if $status1 != TIMEOUT && $status1 != CORRECT
+    # 错误反馈
+    set $trialcorrect 0    
+  fi
+  if $status1 == TIMEOUT && STATUS != TIMEOUT
+    # 一系列的提示位图
+    set $trialcorrect 0
+  fi
+  delay &iti
+  save @1 $nogodelay $rt1 $status1 RT STATUS $trialcorrect

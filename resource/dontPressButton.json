@@ -1,0 +1,31 @@
+{"frames": {
+
+"shouldnothavepressed1.png":
+{
+	"frame": {"x":0,"y":0,"w":1673,"h":1672},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1673,"h":1672},
+	"sourceSize": {"w":1673,"h":1672}
+},
+"shouldnothavepressed2.png":
+{
+	"frame": {"x":1673,"y":0,"w":1673,"h":1672},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1673,"h":1672},
+	"sourceSize": {"w":1673,"h":1672}
+}},
+"animations": {
+	"shouldnothavepressed": ["shouldnothavepressed1.png","shouldnothavepressed2.png","shouldnothavepressed1.png","shouldnothavepressed2.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "dontPressButton.png",
+	"format": "RGBA8888",
+	"size": {"w":3346,"h":1672},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:f82442453dc61022f54b08b29361dc3a:e1a6e05077c0613ab2b295de5bf152e4:fb6bb04f364f7fc7ae40464f851d8725$"
+}
+}

@@ -1,0 +1,39 @@
+{"frames": {
+
+"fixpoint1.png":
+{
+	"frame": {"x":0,"y":0,"w":125,"h":126},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":125,"h":126},
+	"sourceSize": {"w":125,"h":126}
+},
+"fixpoint2.png":
+{
+	"frame": {"x":125,"y":0,"w":202,"h":202},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":202,"h":202},
+	"sourceSize": {"w":202,"h":202}
+},
+"fixpoint3.png":
+{
+	"frame": {"x":0,"y":202,"w":294,"h":294},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":294,"h":294},
+	"sourceSize": {"w":294,"h":294}
+}},
+"animations": {
+	"fixpoint": ["fixpoint1.png","fixpoint2.png","fixpoint3.png","fixpoint2.png","fixpoint1.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "fixpoint.png",
+	"format": "RGBA8888",
+	"size": {"w":327,"h":496},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:ccbe44214380e5b4e1c0fca31011d57d:20b9e1ceee43811eb7e8052b0c3e7e9a:0762594fdf99e80686d67b60a82ba960$"
+}
+}

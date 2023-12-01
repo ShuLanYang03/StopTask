@@ -1,8 +1,35 @@
 // trainingExplanation.js
 
 document.addEventListener("DOMContentLoaded", function () {
-    function getRandomNumber() {
-        return Math.floor(Math.random() * 12); // 0 到 11（包含 11）之間的整數
+    function generateRandomArray(length) {
+        // 確保長度為偶數
+        if (length % 2 !== 0) {
+            throw new Error("Length must be an even number");
+        }
+
+        // 計算0和1的數量
+        const halfLength = length / 2;
+
+        // 生成陣列，先填入一半的0再填入一半的1
+        const initialArray = Array(halfLength)
+            .fill(0)
+            .concat(Array(halfLength).fill(1));
+
+        // 隨機排序陣列
+        const randomArray = initialArray.sort(() => Math.random() - 0.5);
+
+        return randomArray;
+    }
+
+    //   // 使用範例
+    //   const arrayLength = 6; // 偶數長度
+    //   const resultArray = generateRandomArray(arrayLength);
+
+    //   console.log(resultArray);
+
+    //隨機數
+    function getRandomNumber(x) {
+        return Math.floor(Math.random() * x); // 0 到 x（包含 x）之間的整數
     }
 
     const app = new PIXI.Application({
@@ -97,16 +124,16 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("點擊L");
         L_count++;
         console.log(L_count);
-        const randomIndex = getRandomNumber();
-        frame.texture = textureArray[randomIndex];
-        animateTextures(); // 在這裡觸發動畫
+        const randomIndex = getRandomNumber(3);
+        frame.texture = fixpointTexture[randomIndex];
+        //animateTextures(); // 在這裡觸發動畫
     });
     // 設定確認按鈕的點擊事件
     confirmButton_R.on("pointertap", function () {
         console.log("點擊R");
         R_count++;
         console.log(R_count);
-        animateTextures(); // 在這裡觸發動畫
+        //animateTextures(); // 在這裡觸發動畫
     });
     // 延遲函數
     function delay(ms) {

@@ -5,12 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PixiJS Game</title>
-    <script src="https://pixijs.download/release/pixi.min.js"></script>
-</head>
-
-<body>
+    <style>
+        body{
+            margin: 0;
+        }
     
-    <script src="main.js"></script>
+        canvas{
+            display: block;
+            background: blue;
+        }
+    </style>
+</head>
+<!-- 交稿的時候記得把background改成白色 -->
+<body>
+    <canvas id="mycanvas"></canvas>
+    <script src="pixi6.js"></script>
+    <script src="test.js"></script>
 </body>
 
 </html>
