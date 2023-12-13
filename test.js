@@ -110,19 +110,21 @@ document.addEventListener("DOMContentLoaded", function () {
         now_input = "L";
         L_count++;
         console.log(L_count);
-        if (canpress && (z == 1 || z == 3)) {
-            killImg();
+        // 檢查是否按錯（`canpress` 為假或 `z` 不為 1 或 3）
+        if (!canpress || (z !== 1 && z !== 3)) {
+            now_input = "L"; // 如果按錯，將輸入設置為 "L"
+            console.log("按錯");
+            killImg(); // 移除圖像
+            show_wrongkey(); // 播放 "wrongkey" 圖像
+        } else {
+            // 按對的情況
+            killImg(); // 移除圖像
             if (z === 0 || z === 1) {
-                canpress = false;
+                canpress = false; // 如果 `z` 為 0 或 1，將 `canpress` 設置為 false
             } else if (z === 2 || z === 3) {
-                await delay(0); // 強制等待一下，確保 show_arrow(x); 的異步操作完成
+                await delay(0); // 強制等待一段時間，確保 show_arrow(x); 的異步操作完成
                 // 在這裡處理假警報的情況
             }
-        } else {
-            now_input = "L";
-            console.log("按錯");
-            killImg();
-            show_wrongkey();
         }
         //console.log(canpress);
         //switchImg();
@@ -230,8 +232,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const session2Array = generateRandomArray(2).concat(
             generateRandomArray(2)
         );
-        //startButton(session2Array);
-        session(session2Array); //go
+        startButton(session2Array);
+        //session(session2Array); //go
         // session(session2Array); //nogo
     }
     // 添加點擊監聽器
@@ -263,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (btn != null) {
                 app.stage.removeChild(btn);
             }
-            //session(sArray); //go
+            session(sArray); //go
         });
     }
 
@@ -516,6 +518,7 @@ document.addEventListener("DOMContentLoaded", function () {
         background.position.set(app.screen.width / 2, app.screen.height / 2); // 設置位置在舞台中央
         app.stage.addChildAt(background, 0); // 將背景放到最底層
     }
+
     function init_Img(img) {
         // 如果已經有現有的 img 物件，先將其從舞台中移除
         if (currentImg) {
