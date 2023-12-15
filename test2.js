@@ -997,9 +997,9 @@ document.addEventListener("DOMContentLoaded", function () {
         let counts = {};
 
         if (mode === 1) {
-            counts = { 0: 1, 1: 1 };
+            counts = { 0: 20, 1: 20 };
         } else if (mode === 2) {
-            counts = { 0: 1, 1: 1, 2: 1, 3: 1 };
+            counts = { 0: 15, 1: 15, 2: 10, 3: 10 };
         } else {
             throw new Error("Invalid mode");
         }
