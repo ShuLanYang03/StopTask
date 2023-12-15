@@ -51,9 +51,9 @@ document.addEventListener("DOMContentLoaded", function () {
         let counts = {};
 
         if (mode === 1) {
-            counts = { 0: 10, 1: 10 };
+            counts = { 0: 1, 1: 1 };
         } else if (mode === 2) {
-            counts = { 0: 15, 1: 15, 2: 5, 3: 5 };
+            counts = { 0: 1, 1: 1, 2: 1, 3: 1 };
         } else {
             throw new Error("Invalid mode");
         }
@@ -410,9 +410,9 @@ document.addEventListener("DOMContentLoaded", function () {
         img.y = app.renderer.screen.height / 2;
     }
 
-    document.addEventListener("mousedown", () => {});
+    //document.addEventListener("mousedown", () => {});
 
-    document.addEventListener("mouseup", () => {});
+    //document.addEventListener("mouseup", () => {});
 
     function killImg() {
         canpressed = false;
