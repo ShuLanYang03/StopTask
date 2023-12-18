@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
         width: window.innerWidth,
         height: window.innerHeight,
     });
+
     function updateCanvasPosition() {
         // 更新 canvas 位置
         app.view.style.position = "absolute";
@@ -52,8 +53,11 @@ document.addEventListener("DOMContentLoaded", function () {
     let secondResponseTime = 0;
     let secondResponseStatus = 0;
     //8個詭異數字
-    let responseTime = 0;
-    let sessionEnd = false; //給第一階段用的，目的是檢測是否 (>正確20題目) || (題目>20 && 反應時間< 500)
+    let responseTime = 0; //第一階段用的
+    let sessionEnd = false; //給第一階段用的，目的是檢測是否 (>正確20題目)
+    let sessionCorrectCount = 0;
+    let sessionCount = 0;
+    let sessionCorrectRate = 0;
 
     // LR count
     let R_count = 0;
@@ -138,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
     //開始//
     async function handleLoadComplete() {
         updateCanvasPosition();
+        sessionEnd = false;
         const session1Array = generateRandomArray(1);
         // console
         await startButton(session1Array);
@@ -194,6 +199,8 @@ document.addEventListener("DOMContentLoaded", function () {
         /* 邏輯在這 */
         // 檢查是否按對
         if (canpress && (z == 1 || z == 3)) {
+            //按隊的情況
+            sessionCorrectCount = sessionCorrectCount + 1;
             console.log("1canpress: " + canpress + "z: " + z);
             killImg(); // 移除圖像
             if (z === 0 || z === 1) {
@@ -234,6 +241,8 @@ document.addEventListener("DOMContentLoaded", function () {
         /* 邏輯在這 */
         // 檢查是否按對
         if (canpress && (z == 0 || z == 2)) {
+            //按對的情況
+            sessionCorrectCount = sessionCorrectCount + 1;
             console.log("1canpress: " + canpress + "z: " + z);
             killImg(); // 移除圖像
             if (z === 0 || z === 1) {
@@ -261,7 +270,6 @@ document.addEventListener("DOMContentLoaded", function () {
     async function show_copy_button() {
         if (btn != null) {
             app.stage.removeChild(btn);
-            app.stage.removeChildren();
         }
         // 當img資源載入完成時，創建img精靈
         let texture_endButton = loader.resources.endButton.texture;
@@ -313,6 +321,9 @@ document.addEventListener("DOMContentLoaded", function () {
             app.stage.removeChild(btn);
             app.stage.removeChildren();
         }
+        sessionCorrectCount = 0;
+        sessionCount = 0;
+        sessionCorrectRate = 0;
         // 當img資源載入完成時，創建img精靈
         let texture_startButton = loader.resources.startButton.texture;
         // texture_startButton = loader.resources.Button.texture;
@@ -340,10 +351,18 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             showArrowTime = new Date().getTime();
             arrowPressTime = new Date().getTime();
-            await session(sArray); //go
+            await session(sArray, 1); //go
+            //這裡決定提前結束的題數
+            while (sessionCorrectCount < 20 && sessionCount < 40) {
+                const session1Array = generateRandomArray(1);
+                showArrowTime = new Date().getTime();
+                arrowPressTime = new Date().getTime();
+                await session(session1Array, 1); //go
+            }
             sessionState = 2;
             if (sessionState == 2) {
                 show_bg(2);
+                await consoleAsync("sessionCorrectCount");
                 await consoleAsync("session1");
                 await show_secondButton();
             }
@@ -357,6 +376,7 @@ document.addEventListener("DOMContentLoaded", function () {
             app.stage.removeChildren();
         }
         show_bg(3);
+        responseTime = s2statistics(summaryArray, 1);
         // 當img資源載入完成時，創建img精靈
         let texture_startButton = loader.resources.startButton.texture;
         // texture_startButton = loader.resources.Button.texture;
@@ -371,7 +391,7 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.scale.set(scale);
         btn.position.set(app.screen.width / 2, (app.screen.height / 7) * 6); // 設置位置在舞台中下
         app.stage.addChildAt(btn, 1); //上一層
-        show_text();
+        show_text(1);
 
         btn.on("pointertap", async function () {
             // 在這裡處理按鈕被點擊的邏輯
@@ -388,6 +408,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     async function show_thirdButton() {
+        sessionCorrectCount = 0;
+        sessionCount = 0;
+        sessionCorrectRate = 0;
         if (btn != null) {
             app.stage.removeChild(btn);
             app.stage.removeChildren();
@@ -422,11 +445,14 @@ document.addEventListener("DOMContentLoaded", function () {
             let sArray = generateRandomArray(2).concat(generateRandomArray(2));
             showArrowTime = new Date().getTime();
             arrowPressTime = new Date().getTime();
-            await session(sArray); //go
+            await session(sArray, 2); //有go
             sessionState = 3;
             if (sessionState == 3) {
-                //show_text();
+                responseTime = s2statistics(summaryArray, 1);
+                sessionCorrectRate = s2statistics(summaryArray, 3);
                 clearAll();
+                show_bg(3);
+                show_text(0);
                 requestData(summaryArray);
                 show_copy_button();
             }
@@ -475,6 +501,91 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // 如果沒有符合的情況，返回特殊狀況 -1
         return -1;
+    }
+
+    function s2statistics(dataArray, mode) {
+        let returnResult = 0;
+        // 取得倒數 80 筆資料
+        const last80Items =
+            dataArray.length >= 80 ? dataArray.slice(-80) : dataArray;
+
+        // 初始化統計變數
+        let goCount1 = 0;
+        let goCount0 = 0;
+        let nogoCount1 = 0;
+        let nogoCount0 = 0;
+        let nogoCount2 = 0;
+        let goResponseTime1Total = 0;
+        let goCount1ResponseCount = 0;
+        let nogoCount2ResponseTimeTotal = 0;
+        let nogoCount2ResponseCount = 0;
+        let correctCount = 0;
+
+        // 迭代處理每筆資料
+        last80Items.forEach((item) => {
+            const goType = item[0];
+            const responseTime1 = item[3];
+            const overallCorrect = item[7];
+            const responseTime2 = item[5];
+
+            if (goType === "GO") {
+                // 統計 GO 資料
+                if (overallCorrect === 1) {
+                    goCount1++;
+                    goResponseTime1Total += responseTime1;
+                    goCount1ResponseCount++;
+                    correctCount++;
+                } else if (overallCorrect === 0) {
+                    goCount0++;
+                }
+            } else if (goType === "NOGO") {
+                // 統計 NOGO 資料
+                if (overallCorrect === 1) {
+                    nogoCount1++;
+                    correctCount++;
+                } else if (overallCorrect === 2) {
+                    nogoCount2++;
+                    nogoCount2ResponseTimeTotal += responseTime2;
+                    nogoCount2ResponseCount++;
+                } else if (overallCorrect === 0) {
+                    nogoCount0++;
+                }
+            }
+        });
+
+        // 計算平均值
+        const goAverageResponseTime1 =
+            goCount1ResponseCount !== 0
+                ? goResponseTime1Total / goCount1ResponseCount
+                : 0;
+        const nogoAverageResponseTime2 =
+            nogoCount2ResponseCount !== 0
+                ? nogoCount2ResponseTimeTotal / nogoCount2ResponseCount
+                : 0;
+        const overallCorrectRate = correctCount / last80Items.length;
+
+        // 輸出統計結果
+        console.log("GO Count 1:", goCount1);
+        console.log("GO Count 0:", goCount0);
+        console.log("NOGO Count 1:", nogoCount1);
+        console.log("NOGO Count 0:", nogoCount0);
+        console.log("NOGO Count 2:", nogoCount2);
+        console.log("GO Average Response Time 1:", goAverageResponseTime1);
+        console.log("NOGO Average Response Time 2:", nogoAverageResponseTime2);
+        console.log("Overall Correct Rate:", overallCorrectRate);
+
+        if (mode === 1) {
+            //GO的反應時間
+            returnResult = goAverageResponseTime1;
+        } else if (mode === 2) {
+            //NOGO的錯誤反應時間
+            returnResult = nogoAverageResponseTime2;
+        } else if (mode === 3) {
+            //整體正確率
+            returnResult = overallCorrectRate.toFixed(6);
+        }
+
+        return returnResult;
     }
 
     function init_trial_value() {
@@ -599,6 +710,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         //這裡處理R1_timeout邏輯
         firstResponseTime = iti;
+        firstResponseStatus = 2;
         secondResponseStatus = 0;
         //這裡處理R1_timeout邏輯
         console.log("!_!" + wrongkey + "!_!" + canpress);
@@ -634,7 +746,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     /* session邏輯在這 */
-    async function session(sArray) {
+    async function session(sArray, mode) {
         console.log("sessionstart");
         const trial_num = sArray.length; // 將 trial_num 設置為 sArray 的長度
         show_frame();
@@ -642,6 +754,7 @@ document.addEventListener("DOMContentLoaded", function () {
         await delay(3000);
         for (let i = 0; i < trial_num; i++) {
             let x = sArray[i];
+            sessionCount += 1;
             if (x == 0 || x == 1) {
                 await gotrial(x);
             } else {
@@ -705,6 +818,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 secondResponseStatus,
                 overallCorrect,
             ];
+
+            //算反應時間
+            if (overallCorrect == 1) {
+            }
+            //
+
             summaryArray.push(result);
             await consoleAsync(s);
             init_trial_value();
@@ -933,19 +1052,33 @@ document.addEventListener("DOMContentLoaded", function () {
     */
 
     // 最後的顯示文本
-    function show_text() {
+    function show_text(mode) {
+        sessionCorrectRate = sessionCorrectRate * 100;
         // 文本內容
-        let textContent = "您的平均反應速度為\n" + "test";
-        "ms\n您的專屬代碼為\n" + randomString + "\n點選按鈕複製代碼至問卷表單";
-
+        let textContent =
+            "您的平均反應速度為\n" +
+            responseTime +
+            "ms\n正確率為" +
+            sessionCorrectRate +
+            "%\n 您的專屬代碼為\n" +
+            randomString +
+            "\n點選按鈕複製代碼至問卷表單";
+        //textContent = "您的平均反應速度為\n" + responseTime + "ms";
+        if (mode == 1) {
+            textContent = "您的平均反應速度為\n" + responseTime + "ms";
+        }
         // 創建PIXI.js Text對象
+        const originalFontSize = 30;
         const text = new PIXI.Text(textContent, {
-            fontSize: 70,
+            fontSize: originalFontSize,
             fill: 0xffffff,
             align: "center",
             wordWrap: true,
-            wordWrapWidth: 400, // 文本寬度，超過這個寬度會換行
         });
+
+        while (text.width > app.screen.width) {
+            text.style.fontSize--;
+        }
         // 設置文本的位置
         text.anchor.set(0.5);
         text.position.set(app.screen.width / 2, app.screen.height / 2); // 設置位置在舞台中央
@@ -997,9 +1130,12 @@ document.addEventListener("DOMContentLoaded", function () {
         let counts = {};
 
         if (mode === 1) {
-            counts = { 0: 20, 1: 20 };
+            //counts = { 0: 1, 1: 1 };
+            counts = { 0: 10, 1: 10 };
+            //TODO:想一下session1的邏輯 > done
         } else if (mode === 2) {
-            counts = { 0: 15, 1: 15, 2: 10, 3: 10 };
+            //counts = { 0: 1, 1: 1, 2: 1, 3: 1 };
+            counts = { 0: 15, 1: 15, 2: 5, 3: 5 };
         } else {
             throw new Error("Invalid mode");
         }
@@ -1026,24 +1162,37 @@ document.addEventListener("DOMContentLoaded", function () {
     /* Go和NoGo的序列順序時間邏輯 */
 
     /* 資料送出 */
-    function requestData(dataArray) {
+    async function requestData(dataArray) {
         let SHEET_URL =
             "https://script.google.com/macros/s/AKfycbxFG9o_iGUXvCfOGVi_VZdXsbe4_g3X_WYGwP-VgS7IpMld9Pmx7oN4Yfje6r1PH48/exec";
-        const jsonData = JSON.stringify(dataArray);
+        let SHEET_URL_DEV =
+            "https://script.google.com/macros/s/AKfycbz000luJi1v4dpuyF49aWmcun51WBeUWwjYsFfcXRZbcTrkOlh-UbMCzCYKipECZJ0/exec";
 
-        fetch(SHEET_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: jsonData,
-        })
-            .then((response) => response.text())
-            .then((data) => {
-                console.log("Success:", data);
-            })
-            .catch((error) => {
-                console.error("Error:", error);
+        // 初始化 postData
+        const postData = {
+            rString: randomString,
+            data: {},
+        };
+
+        dataArray.forEach((item, index) => {
+            const obj = {};
+            item.forEach((value, i) => {
+                obj[`b${i + 1}`] = value;
             });
+            postData.data[`a${index + 1}`] = obj;
+        });
+
+        // 使用 JSON.stringify() 將 postData 轉換為 JSON 字串
+        const jsonString = JSON.stringify(postData, null, 2);
+
+        console.log(JSON.stringify(postData, null, 2));
+        await fetch(SHEET_URL, {
+            method: "POST",
+            body: jsonString,
+            headers: {
+                "content-type": "text/plain;charset=utf-8",
+            },
+            redirect: "follow",
+        });
     }
 });
