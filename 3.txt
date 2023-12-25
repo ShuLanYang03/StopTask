@@ -1,8 +1,0 @@
-#這裡定義了兩個表格，分別是 gotable 和 nogotable，用來規定 "go" 和 "nogo" 的情況，以及對應的按鍵和對應的位圖。
-table gotable
-  "go   left"  leftarrow  1
-  "go   right" rightarrow 2
-
-table nogotable
-  "nogo left"  leftarrow  1 leftarrownogo
-  "nogo right" rightarrow 2 rightarrownogo

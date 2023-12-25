@@ -2,8 +2,10 @@
 <html lang="zh-Hant">
 
 <head>
+    <script type='application/javascript' src="fastclick.js"></script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- 先解決android的問題等等再去生iphone的問題 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no,minimum-scale=1, maximum-scale=1">
     <title>PixiJS Game</title>
     <style>
         body{
@@ -13,12 +15,20 @@
         canvas{
             display: block;
             background: blue;
+            touch-action: manipulation;
         }
     </style>
 </head>
 <!-- 交稿的時候記得把background改成白色 -->
 <body>
     <canvas id="mycanvas"></canvas>
+    <script>
+    if ('addEventListener' in document) {
+        document.addEventListener('DOMContentLoaded', function() {
+            FastClick.attach(document.body);
+        }, false);
+    }
+    </script>
     <script src="pixi6.js"></script>
     <script src="test2.js"></script>
     <!-- <script src="test.js"></script> -->

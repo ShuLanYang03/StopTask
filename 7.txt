@@ -1,7 +1,0 @@
-# stopgo
-block stopgo
-  message instruction2
-  tasklist
-    go 30
-    nogo 10
-  end
