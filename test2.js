@@ -300,7 +300,7 @@ document.addEventListener(
             const scale = buttonWidth / btn.width;
             btn.scale.set(scale);
             btn.position.set(app.screen.width / 2, (app.screen.height / 7) * 6); // 設置位置在舞台中下
-            app.stage.addChildAt(btn, 1); //上一層
+            app.stage.addChildAt(btn, 2); //上一層
             console.log(summaryArray);
 
             btn.on("touchstart", async function () {
