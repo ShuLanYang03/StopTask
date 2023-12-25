@@ -1105,17 +1105,17 @@ document.addEventListener(
 
         // 最後的顯示文本
         function show_text(mode) {
-            //這裡計算有一些問題需要修改，然後記得四捨五入
+            //這裡計算有一些問題需要修改，然後記得四捨五入，Done?
             responseTime = responseTime.toFixed(4);
             sessionCorrectRate = sessionCorrectRate * 100;
             sessionCorrectRate = sessionCorrectRate.toFixed(4);
             // 文本內容
             let textContent =
-                "您的平均反應速度為\n" +
+                "您的平均反應速度為" +
                 responseTime +
                 "ms\n正確率為" +
                 sessionCorrectRate +
-                "%\n 您的專屬代碼為\n" +
+                "%\n您的專屬代碼為\n" +
                 randomString +
                 "\n點選按鈕複製代碼至問卷表單";
             //textContent = "您的平均反應速度為\n" + responseTime + "ms";
@@ -1133,6 +1133,9 @@ document.addEventListener(
 
             while (text.width > app.screen.width) {
                 text.style.fontSize--;
+            }
+            if (mode == 0) {
+                text.style.fontSize = text.style.fontSize * 0.75;
             }
             // 設置文本的位置
             text.anchor.set(0.5);
