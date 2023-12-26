@@ -302,11 +302,12 @@ document.addEventListener(
             btn.position.set(app.screen.width / 2, (app.screen.height / 7) * 6); // 設置位置在舞台中下
             app.stage.addChildAt(btn, 2); //上一層
             console.log(summaryArray);
-
-            btn.on("touchstart", async function () {
+            //這邊改成pointertap
+            btn.on("pointertap", async function () {
                 // 在這裡處理按鈕被點擊的邏輯
                 console.log(randomString);
                 copyToClipboard(randomString);
+                goToForm();
             });
         }
         // 複製到剪貼簿的函數
@@ -317,8 +318,14 @@ document.addEventListener(
             textarea.select();
             document.execCommand("copy");
             document.body.removeChild(textarea);
-            // 在這裡設置你想要打開的網頁的URL
-            //var url = "https://www.example.com";
+            // // 在這裡設置你想要打開的網頁的URL
+            // //var url = "https://www.example.com";
+            // let url = "https://forms.gle/bfgYtCV8MTSVfmcc9";
+            // // 使用 window.open 開啟新的網頁
+            // window.open(url, "_blank");
+        }
+        // 表單頁面函數
+        function goToForm() {
             let url = "https://forms.gle/bfgYtCV8MTSVfmcc9";
             // 使用 window.open 開啟新的網頁
             window.open(url, "_blank");
