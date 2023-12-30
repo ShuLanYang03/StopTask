@@ -326,7 +326,8 @@ document.addEventListener(
         }
         // 表單頁面函數
         function goToForm() {
-            let url = "https://forms.gle/bfgYtCV8MTSVfmcc9";
+            let url = "https://forms.gle/oiGkEMh4RvLAJJTW9";
+            //let url = "https://forms.gle/bfgYtCV8MTSVfmcc9";
             // 使用 window.open 開啟新的網頁
             window.open(url, "_blank");
         }
