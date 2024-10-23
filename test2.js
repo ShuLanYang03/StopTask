@@ -1242,8 +1242,7 @@ document.addEventListener(
             let SHEET_URL =
                 "https://script.google.com/macros/s/AKfycbwzbK1GH_gx1D6JsnVo1bqtdeD35uvy8TuowaWEBKvrjkkqy5ptEizo2dsJfaifVXCtYA/exec";
             let SHEET_URL_DEV =
-                "https://script.google.com/macros/s/AKfycbz000luJi1v4dpuyF49aWmcun51WBeUWwjYsFfcXRZbcTrkOlh-UbMCzCYKipECZJ0/exec";
-
+                "https://script.google.com/macros/s/AKfycbzHv8KQMUfULvdh_hG8cxwcnqK3rNcrteW9jvI8EVZf6iLTuPrwtrJZs6wBD925AVpp/exec";
             // 初始化 postData
             const postData = {
                 rString: randomString,
@@ -1263,6 +1262,17 @@ document.addEventListener(
 
             console.log(JSON.stringify(postData, null, 2));
             await fetch(SHEET_URL, {
+                method: "POST",
+                body: jsonString,
+                headers: {
+                    "content-type": "text/plain;charset=utf-8",
+                },
+                redirect: "follow",
+            });
+
+            //20241024
+            console.log(JSON.stringify(postData, null, 2));
+            await fetch(SHEET_URL_DEV, {
                 method: "POST",
                 body: jsonString,
                 headers: {
